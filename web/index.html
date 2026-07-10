@@ -102,9 +102,8 @@
       }
     }, 180);
 
-    // Emergency fallback only: normal startup is dismissed by Flutter after
-    // the first portfolio image is ready to display.
-    window.setTimeout(window.hideAppLoader, 15000);
+    // Emergency fallback in case Flutter cannot initialize.
+    window.setTimeout(window.hideAppLoader, 5000);
   </script>
 
   <!-- iOS meta tags & icons -->

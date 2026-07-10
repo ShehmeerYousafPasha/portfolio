@@ -20,8 +20,8 @@ _flutter.loader.load({
   onEntrypointLoaded: function(engineInitializer) {
     engineInitializer.initializeEngine().then(function(appRunner) {
       appRunner.runApp();
-      // Flutter dismisses the single HTML splash after its first portfolio
-      // image is decoded and the initial frame has been rendered.
+      // Let Flutter paint its first frame, then reveal the portfolio.
+      window.setTimeout(window.hideAppLoader, 800);
     });
   },
 });
