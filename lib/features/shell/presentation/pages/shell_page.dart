@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/responsive_utils.dart';
+import '../../../../services/page_refresh_service.dart';
 import '../../../../shared/widgets/common/app_footer.dart';
 import '../widgets/app_nav_bar.dart';
 import '../widgets/mobile_drawer.dart';
@@ -57,6 +58,11 @@ class _ShellPageState extends State<ShellPage> {
     }
   }
 
+  Future<void> _refreshPage() async {
+    await Future<void>.delayed(const Duration(milliseconds: 180));
+    PageRefreshService.refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceType = deviceTypeOf(context);
@@ -68,20 +74,29 @@ class _ShellPageState extends State<ShellPage> {
       body: Stack(
         children: [
           // ── Scrollable content: page body + footer ──────────────────────
-          CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              // Top spacer so content starts below the fixed nav bar
-              const SliverToBoxAdapter(
-                child: SizedBox(height: AppSpacing.navHeight),
+          RefreshIndicator.adaptive(
+            color: Theme.of(context).colorScheme.primary,
+            displacement: AppSpacing.navHeight + 8,
+            edgeOffset: AppSpacing.navHeight,
+            onRefresh: _refreshPage,
+            child: CustomScrollView(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
               ),
+              slivers: [
+                // Top spacer so content starts below the fixed nav bar
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.navHeight),
+                ),
 
-              // Routed page content
-              SliverToBoxAdapter(child: widget.child),
+                // Routed page content
+                SliverToBoxAdapter(child: widget.child),
 
-              // Footer
-              const SliverToBoxAdapter(child: AppFooter()),
-            ],
+                // Footer
+                const SliverToBoxAdapter(child: AppFooter()),
+              ],
+            ),
           ),
 
           // ── Fixed nav bar overlay ─────────────────────────────────────────

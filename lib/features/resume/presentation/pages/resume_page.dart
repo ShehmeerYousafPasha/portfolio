@@ -6,6 +6,7 @@ import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/utils/responsive_utils.dart';
 import '../../../../services/analytics_service.dart';
+import '../../../../services/file_download_service.dart';
 import '../../../../services/link_launcher.dart';
 import '../../../../shared/layouts/page_layout.dart';
 import '../../../../shared/widgets/buttons/primary_button.dart';
@@ -261,7 +262,10 @@ class _ResumeContent extends StatelessWidget {
                 icon: Icons.download_rounded,
                 onPressed: () {
                   AnalyticsService.trackResumeDownload();
-                  LinkLauncher.open(context, AppAssets.resumePdf);
+                  FileDownloadService.download(
+                    urlOrPath: AppAssets.resumePdf,
+                    fileName: AppAssets.resumePdfFileName,
+                  );
                 },
               ),
             ),

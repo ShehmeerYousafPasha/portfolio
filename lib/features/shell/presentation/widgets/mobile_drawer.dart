@@ -20,7 +20,7 @@ import 'nav_destination.dart';
 /// 2. Navigation items — all destinations with icons
 /// 3. Divider
 /// 4. Theme toggle row
-/// 5. Social quick-links (GitHub, LinkedIn, Email)
+/// 5. Social quick-links (GitHub, LinkedIn, WhatsApp, Email)
 /// 6. Version / build note
 ///
 /// Tapping a nav item navigates and closes the drawer automatically.
@@ -290,6 +290,12 @@ class _DrawerFooter extends StatelessWidget {
                 icon: Icons.link_rounded,
                 tooltip: 'LinkedIn',
                 url: profileData.linkedinUrl,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              _SocialIconButton(
+                icon: Icons.chat_rounded,
+                tooltip: 'WhatsApp',
+                url: profileData.whatsappUrl,
               ),
               const SizedBox(width: AppSpacing.sm),
               _SocialIconButton(
