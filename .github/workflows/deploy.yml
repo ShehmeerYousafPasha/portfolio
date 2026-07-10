@@ -66,10 +66,15 @@ jobs:
 
       # ── Patch GA Measurement ID into built index.html ──────────────────
       - name: Patch GA Measurement ID
-        if: ${{ secrets.GA_MEASUREMENT_ID != '' }}
+        env:
+          GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
         run: |
-          sed -i "s/G-XXXXXXXXXX/${{ secrets.GA_MEASUREMENT_ID }}/g" build/web/index.html
-          echo "GA Measurement ID patched"
+          if [ -n "$GA_MEASUREMENT_ID" ]; then
+            sed -i "s/G-XXXXXXXXXX/$GA_MEASUREMENT_ID/g" build/web/index.html
+            echo "GA Measurement ID patched"
+          else
+            echo "No GA Measurement ID configured"
+          fi
 
       # ── Build size report ──────────────────────────────────────────────
       - name: Build size report
