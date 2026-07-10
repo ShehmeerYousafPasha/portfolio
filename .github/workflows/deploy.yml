@@ -60,7 +60,7 @@ jobs:
         run: |
           flutter build web \
             --release \
-            --pwa-strategy offline-first \
+            --pwa-strategy none \
             --base-href /portfolio/ \
             --dart-define=GA_MEASUREMENT_ID=${{ secrets.GA_MEASUREMENT_ID || 'G-XXXXXXXXXX' }}
 
