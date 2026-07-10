@@ -4,7 +4,7 @@ This Flutter portfolio supports Web, Android, and iOS. GitHub Pages deploys the 
 
 ## Prerequisites
 
-- Flutter SDK 3.24.0 or a compatible stable release
+- Flutter SDK 3.44.0 or a compatible stable release
 - Chrome for local Web development
 - Android Studio for Android development
 - macOS with Xcode for iOS development

@@ -36,7 +36,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'  # pin to avoid surprise breakages
+          flutter-version: '3.44.0'  # supports the current Material and Color APIs
           channel: stable
           cache: true
 
