@@ -6,11 +6,6 @@ _flutter.loader.load({
   // "auto" → canvaskit on desktop/tablet, html on mobile.
   // This gives the best trade-off: sharp text on desktop, fast initial
   // load on mobile. Override with "canvaskit" or "html" if needed.
-  config: {
-    // "auto" chooses the best renderer for the current browser.
-    renderer: "auto",
-  },
-
   // ── Loading UX ────────────────────────────────────────────────────────
   onEntrypointLoaded: function(engineInitializer) {
     engineInitializer.initializeEngine().then(function(appRunner) {
