@@ -19,9 +19,11 @@ _flutter.loader.load({
   // ── Loading UX ────────────────────────────────────────────────────────
   onEntrypointLoaded: function(engineInitializer) {
     engineInitializer.initializeEngine().then(function(appRunner) {
+      window.addEventListener('flutter-first-frame', window.hideAppLoader, {
+        once: true,
+      });
       appRunner.runApp();
-      // Let Flutter paint its first frame, then reveal the portfolio.
-      window.setTimeout(window.hideAppLoader, 800);
+      // The loader is dismissed by Flutter's first rendered frame event.
     });
   },
 });
