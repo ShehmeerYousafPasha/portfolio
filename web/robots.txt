@@ -1,0 +1,20 @@
+# robots.txt for https://shehmeeryousafpasha.github.io/portfolio/
+# Shehmeer Yousaf — Flutter Developer Portfolio
+
+# ── Allow all crawlers ──────────────────────────────────────────────────────
+User-agent: *
+Allow: /
+
+# ── Block asset internals that shouldn't be indexed ────────────────────────
+Disallow: /assets/resume/
+Disallow: /flutter_service_worker.js
+Disallow: /flutter_bootstrap.js
+Disallow: /main.dart.js
+Disallow: /version.json
+Disallow: /NOTICES
+
+# ── Crawl rate hint ─────────────────────────────────────────────────────────
+Crawl-delay: 1
+
+# ── Sitemap ─────────────────────────────────────────────────────────────────
+Sitemap: https://shehmeeryousafpasha.github.io/portfolio/sitemap.xml

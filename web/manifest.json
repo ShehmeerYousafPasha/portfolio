@@ -1,0 +1,17 @@
+{
+  "name": "Shehmeer Yousaf - Flutter Developer",
+  "short_name": "Shehmeer Yousaf",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F6F8FA",
+  "theme_color": "#075448",
+  "description": "Shehmeer Yousaf is a Flutter app developer building production-ready mobile and web experiences.",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "favicon.png",
+      "type": "image/png"
+    }
+  ]
+}

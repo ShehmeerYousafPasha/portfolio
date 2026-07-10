@@ -1,0 +1,114 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Auto-deploy on every push to main
+  push:
+    branches: [main]
+
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'production'
+        type: choice
+        options: [production]
+
+# Allow one deploy at a time — cancel older runs if a newer push arrives
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  # ── Build ──────────────────────────────────────────────────────────────
+  build:
+    name: Build Flutter Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history for accurate git info
+
+      # ── Flutter setup ──────────────────────────────────────────────────
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'  # pin to avoid surprise breakages
+          channel: stable
+          cache: true
+
+      - name: Verify Flutter version
+        run: flutter --version
+
+      # ── Dependencies ───────────────────────────────────────────────────
+      - name: Get dependencies
+        run: flutter pub get
+
+      # ── Code quality ───────────────────────────────────────────────────
+      - name: Analyze code
+        run: flutter analyze --no-fatal-infos
+
+      # ── Tests ──────────────────────────────────────────────────────────
+      - name: Run tests
+        run: flutter test
+
+      # ── Release build ──────────────────────────────────────────────────
+      - name: Build Flutter Web (release)
+        run: |
+          flutter build web \
+            --release \
+            --pwa-strategy offline-first \
+            --base-href /portfolio/ \
+            --dart-define=GA_MEASUREMENT_ID=${{ secrets.GA_MEASUREMENT_ID || 'G-XXXXXXXXXX' }}
+
+      # ── Patch GA Measurement ID into built index.html ──────────────────
+      - name: Patch GA Measurement ID
+        if: ${{ secrets.GA_MEASUREMENT_ID != '' }}
+        run: |
+          sed -i "s/G-XXXXXXXXXX/${{ secrets.GA_MEASUREMENT_ID }}/g" build/web/index.html
+          echo "GA Measurement ID patched"
+
+      # ── Build size report ──────────────────────────────────────────────
+      - name: Build size report
+        run: |
+          echo "### Build Size" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          du -sh build/web/ >> $GITHUB_STEP_SUMMARY
+          du -sh build/web/main.dart.js 2>/dev/null >> $GITHUB_STEP_SUMMARY || true
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      # ── Upload build artifact ──────────────────────────────────────────
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  # ── Deploy ─────────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+
+    # Required permissions for GitHub Pages deployment
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Deployment summary
+        run: |
+          echo "### Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Deployed to: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "Deployed at: $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY

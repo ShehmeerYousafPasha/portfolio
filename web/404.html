@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shehmeer Yousaf — Flutter Developer</title>
+
+  <!--
+    GitHub Pages SPA Routing Fix
+    ─────────────────────────────
+    GitHub Pages returns this 404.html whenever a direct URL is visited
+    that isn't a real file (e.g. https://shehmeeryousafpasha.github.io/portfolio/projects).
+
+    This page:
+    1. Encodes the full URL path + query into sessionStorage
+    2. Immediately redirects to index.html (the Flutter entry point)
+
+    index.html then reads sessionStorage and uses history.replaceState
+    to restore the original URL before Flutter's GoRouter boots — so
+    the router sees the correct path and renders the right page.
+
+    Technique: https://github.com/rafgraph/spa-github-pages
+  -->
+  <script>
+    // Encode current path + query + hash into sessionStorage
+    var loc = window.location;
+    var path = loc.pathname + loc.search + loc.hash;
+
+    // Store for index.html to read on load
+    sessionStorage.setItem('spa_redirect', path);
+
+    // Redirect to the app root for the current base path.
+    var basePath = loc.pathname;
+    if (!basePath.endsWith('/')) {
+      basePath = basePath.substring(0, basePath.lastIndexOf('/') + 1);
+    }
+    if (!basePath) {
+      basePath = '/';
+    }
+
+    loc.replace(loc.origin + basePath + '?p=1');
+  </script>
+</head>
+<body>
+  <!-- Redirect in progress — this page is never rendered visibly -->
+</body>
+</html>
